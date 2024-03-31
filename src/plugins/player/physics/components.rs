@@ -2,10 +2,10 @@ use bevy::math::{Quat, Vec2, Vec3};
 use bevy::prelude::Component;
 
 #[derive(Component)]
-pub struct PlayerEntity;
+pub struct PlayerPhysicsEntity;
 
 #[derive(Component)]
-pub struct PlayerOptions {
+pub struct PlayerPhysicsOptions {
     pub speed_walking: f32,
     pub speed_crouching: f32,
     pub speed_sprinting: f32,
@@ -19,7 +19,7 @@ pub struct PlayerOptions {
     pub orientation_rotation: Quat
 }
 
-impl Default for PlayerOptions {
+impl Default for PlayerPhysicsOptions {
     fn default() -> Self {
         return Self {
             speed_walking: 5.0,
@@ -37,33 +37,12 @@ impl Default for PlayerOptions {
 }
 
 #[derive(Component)]
-pub struct PlayerInputState {
-    pub movement_normalized: Vec2,
-
-    pub jumping: bool,
-    pub crouching: bool,
-    pub sprinting: bool
-}
-
-impl Default for PlayerInputState {
-    fn default() -> Self {
-        return Self {
-            movement_normalized: Vec2::ZERO,
-
-            jumping: false,
-            crouching: false,
-            sprinting: false
-        }
-    }
-}
-
-#[derive(Component)]
-pub struct PlayerPhysics {
+pub struct PlayerPhysicsState {
     pub velocity: Vec3,
     pub speed: f32
 }
 
-impl Default for PlayerPhysics {
+impl Default for PlayerPhysicsState {
     fn default() -> Self {
         return Self {
             velocity: Vec3::ZERO,

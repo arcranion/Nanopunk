@@ -6,8 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-bevy = { version = "0.13.0", features = ["dynamic_linking"] }
+bevy = { version = "0.13.1", features = ["dynamic_linking"] }
 bevy_rapier3d = "0.25.0"
+bevy_egui = "0.26.0"
+bevy-inspector-egui = "0.23.4"
+#bevy_quill = "0.1.1" // Does not support bevy 0.13
+#belly = { git = "https://github.com/jkb0o/belly.git" } // Does not support fucking bevy 0.13
 leafwing-input-manager = "0.13.3"
 nalgebra = "0.32.3"
 

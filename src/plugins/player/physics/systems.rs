@@ -1,61 +1,18 @@
-use bevy::app::{App, Plugin, Update};
-use bevy::prelude::{FloatExt, IntoSystemConfigs, Query, Res, Vec3, With};
-use bevy::time::Time;
-use bevy_rapier3d::control::{KinematicCharacterController, KinematicCharacterControllerOutput};
-use bevy_rapier3d::plugin::RapierConfiguration;
-use leafwing_input_manager::action_state::ActionState;
-use crate::input::actions::Actions;
+use bevy::prelude::*;
+use bevy_rapier3d::prelude::*;
 
-use crate::plugins::player::components::entity::{PlayerEntity, PlayerInputState, PlayerOptions, PlayerPhysics};
+use crate::plugins::player::components::PlayerEntity;
+use crate::plugins::player::input::components::PlayerInputState;
+use crate::plugins::player::input::systems::player_input;
+use crate::plugins::player::physics::components::{PlayerPhysicsOptions, PlayerPhysicsState};
 
-pub struct PlayerMovementPlugin;
 
-impl Plugin for PlayerMovementPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_systems(Update, (
-            player_input,
-            player_update_speed.after(player_input),
-            player_movement.after(player_update_speed)
-        ));
 
-        return;
-    }
-}
-
-fn player_input(
-    mut query_player: Query<
-        (
-            &mut PlayerInputState
-        ),
-        With<PlayerEntity>
-    >,
-    query_action_state: Query<&ActionState<Actions>>
-) {
-    let action_state = query_action_state.single();
-
-    for (
-        mut player_input_state
-    ) in query_player.iter_mut() {
-        // Update movement
-        let axis_pair = action_state.axis_pair(&Actions::PlayerMove).unwrap();
-
-        player_input_state.movement_normalized = axis_pair.xy().normalize_or_zero();
-
-        // Update jumping, sprinting, crouching state
-        player_input_state.jumping = action_state.pressed(&Actions::PlayerJump);
-        player_input_state.sprinting = action_state.pressed(&Actions::PlayerSprint);
-        player_input_state.crouching = action_state.pressed(&Actions::PlayerCrouch);
-
-        // println!("movement_nor: {}", player_input_state.movement_normalized.to_string());
-        // println!("jumping: {}", player_input_state.jumping);
-    }
-}
-
-fn player_update_speed(
+pub(super) fn player_update_speed(
     mut query_player: Query<(
         &PlayerInputState,
-        &PlayerOptions,
-        &mut PlayerPhysics
+        &PlayerPhysicsOptions,
+        &mut PlayerPhysicsState
     ), With<PlayerEntity>>,
     time: Res<Time>
 ) {
@@ -72,14 +29,20 @@ fn player_update_speed(
     }
 }
 
-fn player_movement(
+pub(super) fn player_look(
+    
+) {
+
+}
+
+pub(super) fn player_movement(
     mut query_player: Query<
         (
             &mut KinematicCharacterController,
             Option<&mut KinematicCharacterControllerOutput>,
-            &mut PlayerPhysics,
+            &mut PlayerPhysicsState,
             &mut PlayerInputState,
-            &PlayerOptions
+            &PlayerPhysicsOptions
         ), With<PlayerEntity>
     >,
     res_rapier_configuration: Res<RapierConfiguration>,

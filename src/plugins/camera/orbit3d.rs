@@ -1,7 +1,7 @@
 use std::ops::{Neg, Range};
 use std::os::linux::raw::stat;
-use bevy::math::{EulerRot, FloatExt, Quat, Vec3};
-use bevy::prelude::{Animatable, Bundle, Camera3dBundle, Component, Entity, Query, Res, Time, Transform, With, Without};
+use bevy::math::{EulerRot, Quat, Vec3};
+use bevy::prelude::{Bundle, Camera3dBundle, Component, Entity, FloatExt, Query, Res, Time, Transform, With, Without};
 use leafwing_input_manager::prelude::ActionState;
 use crate::input::actions::Actions;
 

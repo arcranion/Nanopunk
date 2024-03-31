@@ -1,4 +1,3 @@
-use bevy::input::keyboard::Key;
 use bevy::prelude::{KeyCode, MouseButton, Reflect};
 use leafwing_input_manager::Actionlike;
 use leafwing_input_manager::prelude::{DualAxis, InputMap, SingleAxis, VirtualDPad};
@@ -9,6 +8,7 @@ pub enum Actions {
     DevActiveOrbit,
     DevZoomControl,
 
+    PlayerLook,
     PlayerMove,
     PlayerJump,
     PlayerCrouch,
