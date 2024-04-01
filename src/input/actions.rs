@@ -25,6 +25,7 @@ impl Actions {
         map.insert(Actions::DevZoomControl, SingleAxis::mouse_wheel_y());
 
         map.insert(Actions::PlayerMove, VirtualDPad::wasd());
+        map.insert(Actions::PlayerLook, VirtualDPad::dpad());
         map.insert(Actions::PlayerJump, KeyCode::Space);
         map.insert(Actions::PlayerCrouch, KeyCode::ControlLeft);
         map.insert(Actions::PlayerSprint, KeyCode::ShiftLeft);
