@@ -2,7 +2,10 @@ use bevy::app::{App, Plugin, Startup};
 use bevy::prelude::Commands;
 use leafwing_input_manager::InputManagerBundle;
 use leafwing_input_manager::plugin::InputManagerPlugin;
-use crate::input::actions::Actions;
+use actions::Actions;
+
+pub mod actions;
+mod drivers;
 
 pub struct InputPlugin;
 

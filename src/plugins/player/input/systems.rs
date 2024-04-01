@@ -1,6 +1,6 @@
-use bevy::prelude::{Query, With};
+use bevy::prelude::{Query, Vec2, Vec3, With};
 use leafwing_input_manager::action_state::ActionState;
-use crate::input::actions::Actions;
+use crate::plugins::input::actions::Actions;
 use crate::plugins::player::components::PlayerEntity;
 use crate::plugins::player::input::components::PlayerInputState;
 
@@ -15,26 +15,18 @@ pub(crate) fn player_input(
 ) {
     let action_state = query_action_state.single();
 
-    let action_move = action_state.axis_pair(&Actions::PlayerMove).unwrap().xy();
-    let action_point = action_state.axis_pair(&Actions::PlayerLook).unwrap().xy().normalize_or_zero();
+    let movement = action_state.axis_pair(&Actions::PlayerMove).unwrap().xy();
 
-    let action_jump = action_state.pressed(&Actions::PlayerJump);
-    let action_sprint = action_state.pressed(&Actions::PlayerSprint);
-    let action_crouch = action_state.pressed(&Actions::PlayerCrouch);
+    for (input_state) in query_player.iter_mut() {
+        input_state.movement = Vec3 {
+            x: movement.x,
+            y: 0.0,
+            z: movement.y
+        };
 
-    for (
-        mut player_input_state
-    ) in query_player.iter_mut() {
-        // Update movement
-        player_input_state.pointing = action_point;
-        player_input_state.movement_normalized = action_move;
+        input_state.sprint = action_state.pressed(&Actions::PlayerSprint);
+        input_state.crouch = action_state.pressed(&Actions::PlayerCrouch);
 
-        // Update jumping, sprinting, crouching state
-        player_input_state.jumping = action_jump;
-        player_input_state.sprinting = action_sprint;
-        player_input_state.crouching = action_crouch;
-
-        // println!("movement_nor: {}", player_input_state.movement_normalized.to_string());
-        // println!("jumping: {}", player_input_state.jumping);
+        input_state.jump = action_state.pressed(&Actions::PlayerJump);
     }
 }

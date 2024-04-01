@@ -2,7 +2,7 @@ use std::ops::Range;
 use bevy::math::Vec3;
 use bevy::prelude::{Bundle, Entity, Component};
 use leafwing_input_manager::Actionlike;
-use crate::input::actions::Actions;
+use crate::plugins::input::actions::Actions;
 
 // Bundle
 #[derive(Bundle)]

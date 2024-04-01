@@ -1,5 +1,6 @@
 use bevy::app::App;
 use bevy::prelude::Plugin;
+use crate::plugins::player::input::PlayerInputPlugin;
 use crate::plugins::player::physics::PlayerPhysicsPlugin;
 
 pub mod physics;
@@ -15,6 +16,9 @@ pub struct PlayerPlugin;
 
 impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugins(PlayerPhysicsPlugin);
+        app.add_plugins((
+            PlayerPhysicsPlugin,
+            PlayerInputPlugin
+        ));
     }
 }

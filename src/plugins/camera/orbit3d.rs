@@ -3,7 +3,7 @@ use std::os::linux::raw::stat;
 use bevy::math::{EulerRot, Quat, Vec3};
 use bevy::prelude::{Bundle, Camera3dBundle, Component, Entity, FloatExt, Query, Res, Time, Transform, With, Without};
 use leafwing_input_manager::prelude::ActionState;
-use crate::input::actions::Actions;
+use crate::plugins::input::actions::Actions;
 
 #[derive(Bundle)]
 pub struct Orbit3dCameraControllerBundle {

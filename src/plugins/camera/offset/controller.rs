@@ -2,7 +2,7 @@ use bevy::asset::io::memory::Value::Vec;
 use bevy::math::{Mat3, Quat, Vec3};
 use bevy::prelude::{Camera, FloatExt, Query, Res, Time, Transform, With, Without};
 use leafwing_input_manager::prelude::ActionState;
-use crate::input::actions::Actions;
+use crate::plugins::input::actions::Actions;
 use crate::plugins::camera::offset::components::{OffsetCameraControllerControl, OffsetCameraControllerEntity, OffsetCameraControllerOptions, OffsetCameraControllerState, OffsetCameraControllerTarget};
 use crate::update;
 

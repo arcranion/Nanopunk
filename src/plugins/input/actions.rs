@@ -24,6 +24,7 @@ impl Actions {
         map.insert(Actions::DevActiveOrbit, MouseButton::Right);
         map.insert(Actions::DevZoomControl, SingleAxis::mouse_wheel_y());
 
+        map.insert(Actions::PlayerLook, DualAxis::mouse_motion()); // TODO: Update this to custom driver
         map.insert(Actions::PlayerMove, VirtualDPad::wasd());
         map.insert(Actions::PlayerJump, KeyCode::Space);
         map.insert(Actions::PlayerCrouch, KeyCode::ControlLeft);

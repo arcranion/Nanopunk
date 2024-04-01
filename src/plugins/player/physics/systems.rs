@@ -1,10 +1,12 @@
+use std::fmt::Pointer;
+use std::ops::Deref;
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
 
 use crate::plugins::player::components::PlayerEntity;
 use crate::plugins::player::input::components::PlayerInputState;
 use crate::plugins::player::input::systems::player_input;
-use crate::plugins::player::physics::components::{PlayerPhysicsOptions, PlayerPhysicsState};
+use crate::plugins::player::physics::components::{PlayerCollider, PlayerPhysicsOptions, PlayerPhysicsState, PlayerTransform, PlayerVelocity};
 
 
 
@@ -38,62 +40,89 @@ pub(super) fn player_look(
 pub(super) fn player_movement(
     mut query_player: Query<
         (
-            &mut KinematicCharacterController,
-            Option<&mut KinematicCharacterControllerOutput>,
+            Entity,
+            &Collider,
+            &Transform,
+            &Velocity,
             &mut PlayerPhysicsState,
             &mut PlayerInputState,
             &PlayerPhysicsOptions
         ), With<PlayerEntity>
     >,
+    res_rapier_context: Res<RapierContext>,
     res_rapier_configuration: Res<RapierConfiguration>,
     time: Res<Time>
 ) {
     let delta = time.delta_seconds();
+
     for (
-        mut character_controller,
-        mut character_controller_output,
-        mut player_physics,
-        mut player_input_state,
-        player_options
+        entity,
+        collider,
+        transform,
+        velocity,
+        physics_state,
+        input_state,
+        physics_options
     ) in query_player.iter_mut() {
-        // Apply gravity
-        player_physics.velocity += res_rapier_configuration.gravity * delta;
+        if let Some(capsule) = collider.as_capsule() {
+            let capsule = capsule.raw;
 
-        // Apply friction
-        player_physics.velocity /= 1.0 + player_options.friction_factor * delta;
+            let capsule_collider = Collider::capsule(
+                capsule.segment.a.into(),
+                capsule.segment.b.into(),
+                capsule.radius * 0.9
+            );
 
-        // Speed multiplied by delta time
-        let speed = player_physics.speed * delta;
+            let filter = QueryFilter::default().exclude_rigid_body(entity);
+            let ground_cast = res_rapier_context.cast_shape(
+                transform.translation,
+                transform.rotation,
+                -Vec3::Y,
+                &capsule_collider,
+                0.125,
+                true,
+                filter
+            );
 
-        // Calculate direction of movement
-        let right = player_options.orientation_rotation * Vec3::X;
-        let forward = player_options.orientation_rotation * Vec3::NEG_Z;
-        let movement_vec3 = Vec3 {
-            x: player_input_state.movement_normalized.x,
-            y: 0.0,
-            z: player_input_state.movement_normalized.y
-        };
-        let direction = (forward + right) * movement_vec3;
-        
-        if let Some(character_controller_output) = character_controller_output {
-            // Apply movement
-            player_physics.velocity += direction * if character_controller_output.grounded {
-                speed
+            let speeds = Vec3::new(physics_options.side_speed, 0.0, physics_options.forward_speed);
+            let mut move_to_world = Mat3::from_axis_angle(Vec3::Y, input_state.yaw);
+            move_to_world.z_axis *= -1.0;
+
+            let mut wish_direction = move_to_world * (input_state.movement * speeds);
+            let mut wish_speed = wish_direction.length();
+
+            if wish_speed > f32::EPSILON {
+                wish_direction /= wish_speed;
+            }
+
+            let max_speed = if input_state.crouch {
+                physics_options.crouched_speed
+            } else if input_state.sprint {
+                physics_options.run_speed
             } else {
-                speed * player_options.midair_factor
+                physics_options.walk_speed
             };
 
-            // Jump if triggered
-            if player_input_state.jumping && character_controller_output.grounded {
-                player_physics.velocity.y += player_options.force_jump;
+            wish_speed = f32::min(wish_speed, max_speed);
+
+            if let Some((toi, toi_details)) = unwrap_toi_details(ground_cast) {
+                let has_reaction = Vec3::dot(toi_details.normal1, Vec3::Y) > physics_options.traction_normal_cutoff;
+
+                
             }
         }
-
-        println!("Velocity: {}", player_physics.velocity.to_string());
-
-        // Apply the velocity to character controller
-        character_controller.translation = Some(player_physics.velocity);
     }
+    
 
     return;
+}
+
+fn unwrap_toi_details(ground_cast: Option<(Entity, Toi)>) -> Option<(Toi, ToiDetails)> {
+    if let Some((_, toi)) = ground_cast {
+        if let Some(details) = toi.details {
+            return Some((toi, details));
+        }
+    }
+
+    return None;
 }

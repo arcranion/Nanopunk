@@ -1,24 +1,21 @@
 use bevy::prelude::*;
-use bevy_egui::EguiPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier3d::prelude::{Collider, RigidBody};
 
-use crate::input::actions::Actions;
 use crate::plugins::camera::CameraControllerPlugin;
-use crate::plugins::camera::offset::components::{OffsetCameraControllerBundle, OffsetCameraControllerControl, OffsetCameraControllerOptions, OffsetCameraControllerTarget};
+use crate::plugins::camera::orbit3d::{Orbit3dCameraControllerBundle, Orbit3dCameraControllerEntity, Orbit3dCameraControllerOptions, Orbit3dCameraControllerState};
+use crate::plugins::camera::orbit3d::Orbit3dCameraControllerTarget::OriginEntity;
 use crate::plugins::input::InputPlugin;
 use crate::plugins::physics::PhysicsPlugin;
 use crate::plugins::player::bundle::PlayerBundle;
 use crate::plugins::player::character::components::PlayerCharacterBundle;
-use crate::plugins::player::physics::bundle::PlayerPhysicsBundle;
 use crate::plugins::player::PlayerPlugin;
 use crate::plugins::screen::ScreenPlugin;
 use crate::plugins::state::StatePlugin;
 
 pub mod plugins;
-pub mod input;
 pub mod state;
-mod core;
+pub mod core;
 
 fn main() {
     App::new()
@@ -49,7 +46,7 @@ fn startup(
     asset_server: Res<AssetServer>
 ) {
     let prototype_texture = asset_server.load("prototype_texture1.png");
-    let player_character_model = asset_server.load("fox.glb#Scene0");
+    let player_character_model = asset_server.load("character.glb#Scene0");
 
     // Spawn test plane
     commands.spawn((PbrBundle {
@@ -75,7 +72,7 @@ fn startup(
             character: PlayerCharacterBundle {
                 scene: SceneBundle {
                     scene: player_character_model,
-                    transform: Transform::from_xyz(0.0, 50.0, 0.0).with_scale(Vec3::splat(0.1)),
+                    transform: Transform::from_xyz(0.0, 50.0, 0.0).with_scale(Vec3::splat(2.0)),
                     ..default()
                 }
             },
@@ -91,20 +88,38 @@ fn startup(
                 // .with_rotation(Quat::from_euler(EulerRot::XYZ, 0.0,  0.0, 0.0)),
             ..default()
         },
-        OffsetCameraControllerBundle {
-            options: OffsetCameraControllerOptions {
-                zoom_factor: Vec3::NEG_Y,
-                zoom_interpolation_factor: 20.0,
-                translation_interpolation_factor: 5.0,
-                offset: Vec3::new(0.0, 100.0, 0.0),
+        Orbit3dCameraControllerBundle {
+            entity: Orbit3dCameraControllerEntity,
+            options: Orbit3dCameraControllerOptions {
+                sensitivity: 1.0,
+                distance_range: f32::MIN .. f32::MAX,
+                distance_sensitivity: 10.0,
+                interpolation_factor: 5.0,
             },
-            target: OffsetCameraControllerTarget::TargetEntity(player),
-            ..default()
+            target: OriginEntity(player),
+            state: Orbit3dCameraControllerState {
+                yaw: 0.0,
+                pitch: 0.0,
+                height: 0.0,
+                yaw_target: 0.0,
+                pitch_target: 0.0,
+                height_target: 50.0,
+            },
         },
-        OffsetCameraControllerControl {
-            zoom_action: Actions::DevZoomControl,
-            zoom_sensitivity: 15.0,
-        }
+        // OffsetCameraControllerBundle {
+        //     options: OffsetCameraControllerOptions {
+        //         zoom_factor: Vec3::NEG_Y,
+        //         zoom_interpolation_factor: 20.0,
+        //         translation_interpolation_factor: 5.0,
+        //         offset: Vec3::new(0.0, 100.0, 0.0),
+        //     },
+        //     target: OffsetCameraControllerTarget::TargetEntity(player),
+        //     ..default()
+        // },
+        // OffsetCameraControllerControl {
+        //     zoom_action: Actions::DevZoomControl,
+        //     zoom_sensitivity: 15.0,
+        // }
     ));
 
     // Spawn a directional light
