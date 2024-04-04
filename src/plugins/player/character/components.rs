@@ -3,15 +3,15 @@ use bevy::prelude::{Bundle, Component, Scene};
 use bevy::scene::SceneBundle;
 
 #[derive(Bundle)]
-pub struct PlayerCharacterBundle {
+pub struct PlayerRendererBundle {
     #[bundle()]
-    pub scene: SceneBundle
+    pub model_scene: SceneBundle
 }
 
-impl Default for PlayerCharacterBundle {
+impl Default for PlayerRendererBundle {
     fn default() -> Self {
         return Self {
-            scene: SceneBundle::default()
+            model_scene: SceneBundle::default()
         }
     }
 }

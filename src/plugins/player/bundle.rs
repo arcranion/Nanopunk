@@ -1,7 +1,7 @@
 use bevy::prelude::*;
 
 use crate::plugins::player::{
-    character::components::PlayerCharacterBundle,
+    character::components::PlayerRendererBundle,
     components::PlayerEntity,
     input::components::PlayerInputState,
     inventory::component::PlayerInventory,
@@ -17,8 +17,6 @@ pub struct PlayerBundle {
 
     #[bundle()]
     pub physics: PlayerPhysicsBundle,
-    #[bundle()]
-    pub character: PlayerCharacterBundle,
     pub inventory: PlayerInventory,
     pub current_tool: PlayerTool
 }
@@ -32,7 +30,6 @@ impl Default for PlayerBundle {
 
             physics: PlayerPhysicsBundle::default(),
 
-            character: PlayerCharacterBundle::default(),
             inventory: PlayerInventory::default(),
             current_tool: PlayerTool::default(),
         }

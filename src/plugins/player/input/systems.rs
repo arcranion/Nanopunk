@@ -1,4 +1,5 @@
 use bevy::prelude::{Query, Vec2, Vec3, With};
+use bevy::window::{PrimaryWindow, Window};
 use leafwing_input_manager::action_state::ActionState;
 use crate::plugins::input::actions::Actions;
 use crate::plugins::player::components::PlayerEntity;
@@ -11,13 +12,20 @@ pub(crate) fn player_input(
         ),
         With<PlayerEntity>
     >,
-    query_action_state: Query<&ActionState<Actions>>
+    query_action_state: Query<&ActionState<Actions>>,
+    query_window: Query<&Window, With<PrimaryWindow>>
 ) {
     let action_state = query_action_state.single();
 
     let movement = action_state.axis_pair(&Actions::PlayerMove).unwrap().xy();
 
-    for (input_state) in query_player.iter_mut() {
+    for (mut input_state) in query_player.iter_mut() {
+        if let Some(look) = action_state.axis_pair(&Actions::PlayerLook) {
+            let look = look.xy();
+
+            input_state.pointer = look;
+        }
+
         input_state.movement = Vec3 {
             x: movement.x,
             y: 0.0,

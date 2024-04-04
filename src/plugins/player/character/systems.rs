@@ -1,7 +1,7 @@
 use bevy::prelude::{Commands, Entity, Query, With, Without};
 use bevy::scene::SceneBundle;
 use bevy::utils::default;
-use crate::plugins::player::character::components::{PlayerCharacterBundle};
+use crate::plugins::player::character::components::{PlayerRendererBundle};
 
 pub(super) fn create_scene(
     // mut commands: Commands,

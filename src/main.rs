@@ -3,12 +3,17 @@ use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier3d::prelude::{Collider, RigidBody};
 
 use crate::plugins::camera::CameraControllerPlugin;
+use crate::plugins::camera::offset::components::{OffsetCameraControllerBundle, OffsetCameraControllerControl, OffsetCameraControllerOptions, OffsetCameraControllerTarget};
 use crate::plugins::camera::orbit3d::{Orbit3dCameraControllerBundle, Orbit3dCameraControllerEntity, Orbit3dCameraControllerOptions, Orbit3dCameraControllerState};
 use crate::plugins::camera::orbit3d::Orbit3dCameraControllerTarget::OriginEntity;
+use crate::plugins::input::actions::Actions;
 use crate::plugins::input::InputPlugin;
 use crate::plugins::physics::PhysicsPlugin;
 use crate::plugins::player::bundle::PlayerBundle;
-use crate::plugins::player::character::components::PlayerCharacterBundle;
+use crate::plugins::player::character::components::PlayerRendererBundle;
+use crate::plugins::player::components::PlayerEntity;
+use crate::plugins::player::physics::bundle::PlayerPhysicsBundle;
+use crate::plugins::player::physics::components::PlayerPhysicsEntity;
 use crate::plugins::player::PlayerPlugin;
 use crate::plugins::screen::ScreenPlugin;
 use crate::plugins::state::StatePlugin;
@@ -46,7 +51,8 @@ fn startup(
     asset_server: Res<AssetServer>
 ) {
     let prototype_texture = asset_server.load("prototype_texture1.png");
-    let player_character_model = asset_server.load("character.glb#Scene0");
+    let player_character_model = asset_server.load("girl_2020.glb#Scene0");
+    // let player_character_model = asset_server.load("character.glb#Scene0");
 
     // Spawn test plane
     commands.spawn((PbrBundle {
@@ -58,34 +64,38 @@ fn startup(
         ..default()
     }, Collider::cuboid(50.0, 0.5, 50.0)));
 
-    // Spawn player with mock model(capsule)
     let player = commands.spawn((
-        // PbrBundle {
-        //     mesh: meshes.add(Cylinder::new(0.5, 2.0)),
-        //     material: materials.add(StandardMaterial::from(Color::WHITE)),
-        //     transform: Transform::from_xyz(0.0, 5.0, 0.0),
-        //     ..default()
-        // },
-        RigidBody::KinematicPositionBased,
-        Collider::cylinder(1.0, 0.5),
         PlayerBundle {
-            character: PlayerCharacterBundle {
-                scene: SceneBundle {
-                    scene: player_character_model,
-                    transform: Transform::from_xyz(0.0, 50.0, 0.0).with_scale(Vec3::splat(2.0)),
-                    ..default()
-                }
+            entity: PlayerEntity,
+            input_state: Default::default(),
+            physics: PlayerPhysicsBundle {
+                entity: PlayerPhysicsEntity,
+
+                transform: Transform::from_xyz(0.0, 50.0, 0.0).into(),
+                options: Default::default(),
+                state: Default::default(),
+                collider: Collider::capsule_y(1.0, 0.5),
+                velocity: Default::default(),
+                ..default()
             },
-            ..default()
+            inventory: Default::default(),
+            current_tool: Default::default(),
         }
-    )).id();
+    )).with_children(|parent| {
+        parent.spawn(PlayerRendererBundle {
+            model_scene: SceneBundle {
+                scene: player_character_model,
+                transform: Transform::from_xyz(0.0, -1.0, 0.0).with_scale(Vec3::splat(1.0)),
+                ..default()
+            }
+        });
+    }).id();
 
     // Spawn top-view camera
     commands.spawn((
         Camera3dBundle {
             transform: Transform::from_xyz(0.0, 20.0, 0.0)
                 .looking_at(Vec3::ZERO, Vec3::NEG_Z),
-                // .with_rotation(Quat::from_euler(EulerRot::XYZ, 0.0,  0.0, 0.0)),
             ..default()
         },
         Orbit3dCameraControllerBundle {
