@@ -2,7 +2,6 @@ use std::fmt::Pointer;
 
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
-use nalgebra::Quaternion;
 
 use crate::plugins::player::components::PlayerEntity;
 use crate::plugins::player::input::components::PlayerInputState;

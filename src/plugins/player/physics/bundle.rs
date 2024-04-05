@@ -1,4 +1,4 @@
-use bevy::prelude::{Bundle, SpatialBundle, Transform, TransformBundle};
+use bevy::prelude::{Bundle, SpatialBundle};
 use bevy_rapier3d::prelude::*;
 
 use crate::plugins::player::physics::components::{PlayerPhysicsEntity, PlayerPhysicsOptions, PlayerPhysicsState};

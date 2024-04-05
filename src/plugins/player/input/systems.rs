@@ -1,6 +1,7 @@
-use bevy::prelude::{Query, Vec2, Vec3, With};
+use bevy::prelude::{Query, Vec3, With};
 use bevy::window::{PrimaryWindow, Window};
 use leafwing_input_manager::action_state::ActionState;
+
 use crate::plugins::input::actions::Actions;
 use crate::plugins::player::components::PlayerEntity;
 use crate::plugins::player::input::components::PlayerInputState;

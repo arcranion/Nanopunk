@@ -1,7 +1,6 @@
 use bevy::prelude::*;
 
 use crate::plugins::player::{
-    character::components::PlayerRendererBundle,
     components::PlayerEntity,
     input::components::PlayerInputState,
     inventory::component::PlayerInventory,

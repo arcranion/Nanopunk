@@ -1,12 +1,10 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
-use bevy_rapier3d::prelude::{Collider, RigidBody};
+use bevy_rapier3d::prelude::Collider;
 
 use crate::plugins::camera::CameraControllerPlugin;
-use crate::plugins::camera::offset::components::{OffsetCameraControllerBundle, OffsetCameraControllerControl, OffsetCameraControllerOptions, OffsetCameraControllerTarget};
 use crate::plugins::camera::orbit3d::{Orbit3dCameraControllerBundle, Orbit3dCameraControllerEntity, Orbit3dCameraControllerOptions, Orbit3dCameraControllerState};
 use crate::plugins::camera::orbit3d::Orbit3dCameraControllerTarget::OriginEntity;
-use crate::plugins::input::actions::Actions;
 use crate::plugins::input::InputPlugin;
 use crate::plugins::physics::PhysicsPlugin;
 use crate::plugins::player::bundle::PlayerBundle;

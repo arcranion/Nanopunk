@@ -1,5 +1,4 @@
-use bevy::asset::Handle;
-use bevy::prelude::{Bundle, Component, Scene};
+use bevy::prelude::Bundle;
 use bevy::scene::SceneBundle;
 
 #[derive(Bundle)]

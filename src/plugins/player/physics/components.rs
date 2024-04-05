@@ -1,6 +1,5 @@
-use bevy::math::{Quat, Vec2, Vec3};
-use bevy::prelude::{Component, Transform};
-use bevy_rapier3d::prelude::{Collider, Velocity};
+use bevy::math::{Quat, Vec3};
+use bevy::prelude::Component;
 
 #[derive(Component)]
 pub struct PlayerPhysicsEntity;

@@ -1,9 +1,10 @@
-mod systems;
-
 use bevy::app::{App, Plugin};
-use bevy::prelude::{in_state, IntoSystemConfigs, OnEnter, OnExit, Update};
-use crate::plugins::screen::load::systems::{enter_screen};
-use crate::state::app::{AppLoadState, AppScreenState};
+use bevy::prelude::{IntoSystemConfigs, OnEnter};
+
+use crate::plugins::screen::load::systems::enter_screen;
+use crate::state::app::AppScreenState;
+
+mod systems;
 
 pub struct LoadScreenPlugin;
 

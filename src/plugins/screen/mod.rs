@@ -1,8 +1,9 @@
-mod load;
-
 use bevy::app::{App, Startup};
-use bevy::prelude::{Camera2dBundle, Commands, Plugin};
+use bevy::prelude::{Commands, Plugin};
+
 use crate::plugins::screen::load::LoadScreenPlugin;
+
+mod load;
 
 pub struct ScreenPlugin;
 

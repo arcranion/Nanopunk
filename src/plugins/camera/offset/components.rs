@@ -1,7 +1,6 @@
-use std::ops::Range;
 use bevy::math::Vec3;
-use bevy::prelude::{Bundle, Entity, Component};
-use leafwing_input_manager::Actionlike;
+use bevy::prelude::{Bundle, Component, Entity};
+
 use crate::plugins::input::actions::Actions;
 
 // Bundle

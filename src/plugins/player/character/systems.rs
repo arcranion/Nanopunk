@@ -1,8 +1,3 @@
-use bevy::prelude::{Commands, Entity, Query, With, Without};
-use bevy::scene::SceneBundle;
-use bevy::utils::default;
-use crate::plugins::player::character::components::{PlayerRendererBundle};
-
 pub(super) fn create_scene(
     // mut commands: Commands,
     // query_player: Query<(Entity, &PlayerCharacterBundle), (

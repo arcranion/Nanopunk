@@ -1,10 +1,8 @@
-use bevy::asset::io::memory::Value::Vec;
-use bevy::math::{Mat3, Quat, Vec3};
-use bevy::prelude::{Camera, FloatExt, Query, Res, Time, Transform, With, Without};
+use bevy::prelude::{FloatExt, Query, Res, Time, Transform, With, Without};
 use leafwing_input_manager::prelude::ActionState;
-use crate::plugins::input::actions::Actions;
+
 use crate::plugins::camera::offset::components::{OffsetCameraControllerControl, OffsetCameraControllerEntity, OffsetCameraControllerOptions, OffsetCameraControllerState, OffsetCameraControllerTarget};
-use crate::update;
+use crate::plugins::input::actions::Actions;
 
 pub(in super::super) fn offset_controller_control(
     mut query_camera: Query<
