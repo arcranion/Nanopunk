@@ -1,3 +1,4 @@
+use std::f32::consts::PI;
 use std::fmt::Pointer;
 
 use bevy::prelude::*;
@@ -65,20 +66,16 @@ pub(super) fn player_look(
             gizmos.sphere(point, Quat::IDENTITY, 5.0, Color::CYAN);
 
             let diff = point - transform.translation;
-            let diff = diff.normalize();
+            let angle = f32::atan2(diff.x, diff.z);
 
-            // let orient = diff;
-            // let cross = Vec3::Y;
-            let orient = Vec3::Y;
-            let cross = diff;
+            let euler = Vec3::new(
+                0.0,
+                angle,
+                0.0
+            );
+            let quaternion = Quat::from_euler(EulerRot::XYZ, euler.x, euler.y, euler.z);
 
-            let axis = orient.cross(cross).normalize();
-
-            let angle = orient.dot(cross).acos();
-
-            let rotation = Quat::from_axis_angle(axis, angle);
-
-            transform.rotation = rotation;
+            transform.rotation = quaternion;
         }
     }
 }

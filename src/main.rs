@@ -19,6 +19,7 @@ use crate::plugins::state::StatePlugin;
 pub mod plugins;
 pub mod state;
 pub mod core;
+pub mod math;
 
 fn main() {
     App::new()
