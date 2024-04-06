@@ -12,7 +12,6 @@ impl Plugin for PlayerPhysicsPlugin {
     fn build(&self, app: &mut App) {
         app.add_systems(Update, (
             systems::player_update_speed.after(player_input),
-            systems::player_look.after(systems::player_update_speed),
             systems::player_movement.after(systems::player_update_speed)
         ));
 

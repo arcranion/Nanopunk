@@ -10,7 +10,7 @@ pub mod inventory;
 pub mod tool;
 pub mod bundle;
 pub mod health;
-pub mod character;
+pub mod renderer;
 
 pub struct PlayerPlugin;
 

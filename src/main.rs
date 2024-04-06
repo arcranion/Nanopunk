@@ -8,7 +8,7 @@ use crate::plugins::camera::orbit3d::Orbit3dCameraControllerTarget::OriginEntity
 use crate::plugins::input::InputPlugin;
 use crate::plugins::physics::PhysicsPlugin;
 use crate::plugins::player::bundle::PlayerBundle;
-use crate::plugins::player::character::components::PlayerRendererBundle;
+use crate::plugins::player::renderer::components::{PlayerRendererBundle, PlayerRendererOptions};
 use crate::plugins::player::components::PlayerEntity;
 use crate::plugins::player::physics::bundle::PlayerPhysicsBundle;
 use crate::plugins::player::physics::components::PlayerPhysicsEntity;
@@ -51,7 +51,7 @@ fn startup(
 ) {
     let prototype_texture = asset_server.load("prototype_texture1.png");
     let player_character_model = asset_server.load("girl_2020.glb#Scene0");
-    // let player_character_model = asset_server.load("character.glb#Scene0");
+    // let player_character_model = asset_server.load("renderer.glb#Scene0");
 
     // Spawn test plane
     commands.spawn((PbrBundle {
@@ -86,7 +86,11 @@ fn startup(
                 scene: player_character_model,
                 transform: Transform::from_xyz(0.0, -1.0, 0.0).with_scale(Vec3::splat(1.0)),
                 ..default()
-            }
+            },
+            options: PlayerRendererOptions {
+                head_name: "Head_M".to_string(),
+            },
+            ..default()
         });
     }).id();
 

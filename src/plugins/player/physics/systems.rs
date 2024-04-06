@@ -3,6 +3,7 @@ use std::fmt::Pointer;
 
 use bevy::prelude::*;
 use bevy_rapier3d::prelude::*;
+use crate::math::vectors::VecExt;
 
 use crate::plugins::player::components::PlayerEntity;
 use crate::plugins::player::input::components::PlayerInputState;
@@ -27,55 +28,6 @@ pub(super) fn player_update_speed(
             physics_options.run_speed
         } else {
             physics_options.walk_speed
-        }
-    }
-}
-
-pub(super) fn player_look(
-    mut query_player: Query<
-        (
-            &PlayerInputState,
-            &PlayerPhysicsOptions,
-            &mut Transform,
-        ), With<PlayerEntity>
-    >,
-    query_camera: Query<
-        (
-            &Camera,
-            &GlobalTransform
-        )
-    >,
-    mut gizmos: Gizmos
-) {
-    let (camera, camera_global_transform) = query_camera.single();
-
-    for (input_state, physics_options, mut transform) in query_player.iter_mut() {
-        let point = camera
-            .viewport_to_world(camera_global_transform, input_state.pointer)
-            .map(|ray| {
-                let distance = if let Some(distance) = ray.intersect_plane(transform.translation, Plane3d::default()) {
-                    distance
-                } else {
-                    physics_options.pointer_distance_max
-                };
-
-                return ray.get_point(distance);
-            });
-
-        if let Some(point) = point {
-            gizmos.sphere(point, Quat::IDENTITY, 5.0, Color::CYAN);
-
-            let diff = point - transform.translation;
-            let angle = f32::atan2(diff.x, diff.z);
-
-            let euler = Vec3::new(
-                0.0,
-                angle,
-                0.0
-            );
-            let quaternion = Quat::from_euler(EulerRot::XYZ, euler.x, euler.y, euler.z);
-
-            transform.rotation = quaternion;
         }
     }
 }
