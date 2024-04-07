@@ -1,3 +1,5 @@
+#![allow(warnings)]
+
 use bevy::prelude::*;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 use bevy_rapier3d::prelude::Collider;
@@ -50,7 +52,7 @@ fn startup(
     asset_server: Res<AssetServer>
 ) {
     let prototype_texture = asset_server.load("prototype_texture1.png");
-    let player_character_model = asset_server.load("girl_2020.glb#Scene0");
+    let player_character_model = asset_server.load("character.glb#Scene0");
     // let player_character_model = asset_server.load("renderer.glb#Scene0");
 
     // Spawn test plane

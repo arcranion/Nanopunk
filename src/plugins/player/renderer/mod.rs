@@ -6,9 +6,9 @@ use crate::plugins::player::renderer::systems::{cache_model, renderer_input, ren
 pub mod components;
 mod systems;
 
-pub struct PlayerCharacterPlugin;
+pub struct PlayerRendererPlugin;
 
-impl Plugin for PlayerCharacterPlugin {
+impl Plugin for PlayerRendererPlugin {
     fn build(&self, app: &mut App) {
         app
             .add_systems(Update, (

@@ -9,7 +9,7 @@ edition = "2021"
 bevy = { version = "0.13.1", features = ["dynamic_linking", "jpeg", "webp"] }
 bevy_rapier3d = { version =  "0.25.0", features = ["debug-render-3d"] }
 bevy_egui = "0.26.0"
-bevy-inspector-egui = "0.23.4"
+bevy-inspector-egui = { version = "0.23.4", features = ["highlight_changes"] }
 #bevy_quill = "0.1.1" // Does not support bevy 0.13
 #belly = { git = "https://github.com/jkb0o/belly.git" } // Does not support fucking bevy 0.13
 leafwing-input-manager = "0.13.3"

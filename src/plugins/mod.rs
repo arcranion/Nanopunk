@@ -4,4 +4,5 @@ pub mod input;
 pub mod camera;
 pub mod state;
 pub mod screen;
-mod weapon;
+pub mod weapon;
+pub mod load;

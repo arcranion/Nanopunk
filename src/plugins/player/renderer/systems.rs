@@ -7,24 +7,39 @@ use crate::plugins::player::input::components::PlayerInputState;
 use crate::plugins::player::physics::components::PlayerPhysicsOptions;
 use crate::plugins::player::renderer::components::{PlayerRendererCache, PlayerRendererCached, PlayerRendererOptions, PlayerRendererState};
 
-fn traverse_entity<T>(
+/// Find entity recursively with matching name
+fn find_entity(
     entity: Entity,
     query_entities: &Query<(Entity, &Name)>,
     query_children: &Query<&Children>,
-    mut f: T,
-) where T: FnMut(Entity, &Name) {
+    key: &String,
+) -> Option<Entity> {
+    let part_name = Name::new(key.clone());
     // Find Name component
+    for (_, name) in query_entities.iter() {
+        println!("Entity {name}")
+    }
+
     if let Ok((entity, name)) = query_entities.get(entity) {
-        f(entity, name)
+        if part_name == *name {
+            return Some(entity);
+        }
     }
 
     // The entity has Children component, traverse
     if let Ok(children) = query_children.get(entity) {
         for child in children {
-            traverse_entity(*child, query_entities, query_children, &mut f);
+            return if let Some(entity) = find_entity(*child, query_entities, query_children, key) {
+                Some(entity)
+            } else {
+                None
+            }
         }
     }
+
+    return None;
 }
+
 
 /// Pre-cache model's part
 pub(super) fn cache_model(
@@ -44,28 +59,17 @@ pub(super) fn cache_model(
         options,
         mut cache
     ) in query_player.iter_mut() {
+        println!("Caching model parts");
+
         let mut to_cache = HashMap::new();
         to_cache.insert(options.head_name.clone(), &mut cache.cached_head);
 
         let mut entity_commands = commands.entity(entity);
-        for (key, &ref entity_ref) in &to_cache {
-            let part_name = Name::new(key.clone());
-
-            // Traverse all entities to cache parts
-            traverse_entity(
-                entity,
-                &query_entities,
-                &query_children,
-                |entity, name: &Name| {
-                    if part_name == *name {
-                        // Update the ref
-                        **entity_ref = entity;
-
-                        // Remove the part from map once it is found
-                        to_cache.remove(&key.clone());
-                    }
-                }
-            );
+        for (key, entity_ref) in to_cache {
+            if let Some(found) = find_entity(entity, &query_entities, &query_children, &key) {
+                *entity_ref = found;
+                println!("Cached \"{key}\"")
+            }
         }
 
         // Add marker component to mark it as cached
@@ -130,7 +134,7 @@ pub(super) fn renderer_update(
         &mut PlayerRendererCache,
         &mut Transform,
     ), With<PlayerEntity>>,
-    mut query_entities: Query<&mut Transform>
+    mut query_entities: Query<&mut Transform, Without<PlayerEntity>>
 ) {
     for (
         mut renderer_state,
