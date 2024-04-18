@@ -1,6 +1,7 @@
 use bevy::app::App;
 use bevy::prelude::Plugin;
 use crate::plugins::player::input::PlayerInputPlugin;
+use crate::plugins::player::look::PlayerLookPlugin;
 use crate::plugins::player::physics::PlayerPhysicsPlugin;
 use crate::plugins::player::renderer::PlayerRendererPlugin;
 
@@ -12,6 +13,7 @@ pub mod tool;
 pub mod bundle;
 pub mod health;
 pub mod renderer;
+mod look;
 
 pub struct PlayerPlugin;
 
@@ -20,7 +22,8 @@ impl Plugin for PlayerPlugin {
         app.add_plugins((
             PlayerPhysicsPlugin,
             PlayerInputPlugin,
-            PlayerRendererPlugin
+            PlayerRendererPlugin,
+            PlayerLookPlugin
         ));
     }
 }

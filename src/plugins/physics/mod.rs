@@ -10,7 +10,7 @@ impl Plugin for PhysicsPlugin {
         app
             .add_plugins((
                 RapierPhysicsPlugin::<NoUserData>::default(),
-                RapierDebugRenderPlugin::default()
+                // RapierDebugRenderPlugin::default()
             ));
 
         return;

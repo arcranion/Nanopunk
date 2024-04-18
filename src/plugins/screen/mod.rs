@@ -1,9 +1,8 @@
-use bevy::app::{App, Startup};
-use bevy::prelude::{Commands, Plugin};
+use bevy::prelude::*;
 
-use crate::plugins::screen::load::LoadScreenPlugin;
+use crate::plugins::screen::main::MainScreenPlugin;
 
-mod load;
+mod main;
 
 pub struct ScreenPlugin;
 
@@ -11,16 +10,10 @@ impl Plugin for ScreenPlugin {
     fn build(&self, app: &mut App) {
         // Add sub-plugins here
         app
-            .add_systems(Startup, init_camera)
             .add_plugins((
-                LoadScreenPlugin
+                MainScreenPlugin
             ));
 
         return;
     }
-}
-
-fn init_camera(mut commands: Commands) {
-    // Add Camera2dBundle for UI
-    // commands.spawn(Camera2dBundle::default());
 }

@@ -12,6 +12,7 @@ pub enum AppLoadState {
 pub enum AppScreenState {
     #[default]
     Loading, // Loading UI
+    LoadError, // Load Error UI
     Main, // Main UI
     Game // In-game
 }

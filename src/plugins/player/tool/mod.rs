@@ -2,7 +2,7 @@ use bevy::prelude::Component;
 
 pub enum PlayerToolType {
     None,
-    Weapon(f32)
+    Weapon(f32) // f32: Index
 }
 
 

@@ -7,6 +7,8 @@ use crate::plugins::player::{
     physics::bundle::PlayerPhysicsBundle,
     tool::PlayerTool
 };
+use crate::plugins::player::look::components::PlayerLookBundle;
+use crate::plugins::player::renderer::components::PlayerRendererBundle;
 
 #[derive(Bundle)]
 pub struct PlayerBundle {
@@ -14,6 +16,8 @@ pub struct PlayerBundle {
 
     pub input_state: PlayerInputState,
 
+    #[bundle()]
+    pub look: PlayerLookBundle,
     #[bundle()]
     pub physics: PlayerPhysicsBundle,
     pub inventory: PlayerInventory,
@@ -27,9 +31,10 @@ impl Default for PlayerBundle {
 
             input_state: PlayerInputState::default(),
 
+            look: PlayerLookBundle::default(),
             physics: PlayerPhysicsBundle::default(),
 
-            inventory: PlayerInventory::default(),
+            inventory: PlayerInventory,
             current_tool: PlayerTool::default(),
         }
     }
